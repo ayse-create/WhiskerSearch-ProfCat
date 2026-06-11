@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 
-
 <title>WhiskerSearch | ProfessorCat – Kedi Temalı Eğlenceli Oyun ve Deneyim Platformu</title>
 
 <meta name="description" content="WhiskerSearch, kedi temalı eğlenceli bir oyun ve interaktif deneyim platformudur. ProfessorCat ile görevler yap, mini oyunlar oyna ve farklı bir dünya keşfet!">
@@ -19,52 +18,43 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="WhiskerSearch">
-<meta name="twitter:description" content="Kedi temalı eğlenceli oyun ve interaktif deneyim 🐱">
+<meta name="twitter:description" content="Kedi temalı eğlenceli deneyim 🐱">
 
 <link rel="canonical" href="https://ayse-create.github.io/WhiskerSearch/">
 
-<!-- SEO SCHEMA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "WhiskerSearch",
-  "url": "https://https://ayse-create.github.io/WhiskerSearch/",
-  "description": "Kedi temalı eğlenceli oyun ve interaktif deneyim platformu"
-}
-</script>
-
-<link rel="icon" href="images/whiskersearch-tatli-arama.ico" type="image/x-icon" />
+<link rel="icon" href="images/whiskersearch.ico" type="image/x-icon" />
 
 <style>
 :root{
-  --purple:#6b21a8;
-  --purple2:#9333ea;
-  --card:#ffffffea;
+  --coffee1:#f7f1e3;
+  --coffee2:#efe6d6;
+  --coffee3:#3b2f2f;
+  --latte:#b08968;
 }
 
-*{box-sizing:border-box}
-
+/* 🧁 ARKA PLAN (krem) */
 body{
   margin:0;
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: system-ui, sans-serif;
   background: linear-gradient(135deg,#f7f1e3,#efe6d6,#e6d5c3);
   padding:24px;
 }
 
+/* 🤍 KART (beyaz) */
 .card{
   width:min(520px,100%);
   background:#ffffff;
-  padding:32px 24px 28px;
+  padding:32px 24px;
   border-radius:28px;
-  box-shadow:0 18px 50px rgba(0,0,0,.15);
+  box-shadow:0 14px 35px rgba(0,0,0,.15);
   text-align:center;
 }
 
+/* 🐱 emoji */
 .emoji{
   font-size:64px;
   animation:float 2.6s ease-in-out infinite;
@@ -76,16 +66,11 @@ body{
   50%{transform:translateY(-14px)}
 }
 
-h1{
-  margin:6px 0;
-  font-size:26px;
-}
+/* ✍️ yazılar */
+h1{margin:6px 0;font-size:26px;}
+p{margin:6px 0 16px;color:#444;}
 
-p{
-  margin:6px 0 16px;
-  color:#444;
-}
-
+/* ☕ BAR (karamel) */
 .bar{
   width:100%;
   height:10px;
@@ -100,15 +85,20 @@ p{
   height:100%;
   width:0%;
   animation:load 3s linear forwards;
-  background: linear-gradient(90deg,#d6b08a,#c49a6c);
+  background:linear-gradient(90deg,#d6a77a,#c49a6c);
 }
 
+@keyframes load{
+  to{width:100%}
+}
+
+/* 🍫 BUTON */
 a.button{
   display:inline-block;
   margin-top:10px;
   padding:12px 16px;
   border-radius:14px;
-  background:#fff;
+  background:#ffffff;
   color:#4b2e1e;
   text-decoration:none;
   font-weight:700;
@@ -118,12 +108,12 @@ a.button{
 
 a.button:hover{
   background:#f7f1e3;
-}
+  transform:scale(1.03);
 }
 </style>
-<!-- hızlı yönlendirme (SEO için daha doğru) -->
+
 <meta http-equiv="refresh" content="2; url=https://ayse-create.github.io/WhiskerSearch">
-<meta name="google-site-verification" content="hPq_WPZAvU4KE1qqk9TOxsd2XuAZEduUX5T1LQYAd-A" />
+
 </head>
 
 <body>
@@ -142,21 +132,7 @@ a.button:hover{
     Hemen Git
   </a>
 
-  <!-- SEO TEXT (GÖRÜNMEZ AMA DAHA TEMİZ) -->
-  <div style="display:none">
-    WhiskerSearch, kedi temalı eğlenceli oyun ve interaktif deneyim platformudur.
-    Kullanıcılar görev tabanlı mini oyunlar oynar, puan kazanır ve farklı bölümleri keşfeder.
-  </div>
-
 </main>
-
-<script>
-setTimeout(()=>{
-  window.location.replace("https://ayse-create.github.io/WhiskerSearch/");
-},3000);
-</script>
-
-
 
 </body>
 </html>
