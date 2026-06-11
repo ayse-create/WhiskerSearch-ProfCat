@@ -52,17 +52,16 @@ body{
   align-items:center;
   justify-content:center;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  background: linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+  background: linear-gradient(135deg,#f7f1e3,#efe6d6,#e6d5c3);
   padding:24px;
 }
 
 .card{
   width:min(520px,100%);
-  background:var(--card);
+  background:#ffffff;
   padding:32px 24px 28px;
   border-radius:28px;
-  box-shadow:0 14px 35px rgba(0,0,0,.22);
-  position:relative;
+  box-shadow:0 18px 50px rgba(0,0,0,.15);
   text-align:center;
 }
 
@@ -90,7 +89,7 @@ p{
 .bar{
   width:100%;
   height:10px;
-  background:#eee;
+  background:#efe0d1;
   border-radius:999px;
   overflow:hidden;
   margin:14px 0 8px;
@@ -100,12 +99,8 @@ p{
   display:block;
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,var(--purple),var(--purple2));
   animation:load 3s linear forwards;
-}
-
-@keyframes load{
-  to{width:100%}
+  background: linear-gradient(90deg,#d6b08a,#c49a6c);
 }
 
 a.button{
@@ -114,10 +109,16 @@ a.button{
   padding:12px 16px;
   border-radius:14px;
   background:#fff;
-  color:var(--purple);
+  color:#4b2e1e;
   text-decoration:none;
   font-weight:700;
-  border:2px solid rgba(107,33,168,.18);
+  border:2px solid #e2cbb5;
+  transition:0.2s;
+}
+
+a.button:hover{
+  background:#f7f1e3;
+}
 }
 </style>
 <!-- hızlı yönlendirme (SEO için daha doğru) -->
