@@ -1,911 +1,344 @@
-<!doctype html>
+```html
+<!DOCTYPE html>
 <html lang="tr">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="google-site-verification" content="hPq_WPZAvU4KE1qqk9TOxsd2XuAZEduUX5T1LQYAd-A" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="İnternette dolaşmanın yeni, sıradışı bir yolu. WhiskerSearch'te her gezinti farklı bir deneyim vaat ediyor... ya da belki etmiyor? Dene ve gör.">
-  <title>🔍 WhiskerSearch</title>
-  <link rel="icon" href="images/whiskersearch-tatli-arama.ico" type="image/x-icon" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: #f0f0f0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    .browser-container {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      background: white;
-    }
-
-    .demo-warning {
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      color: #ffffff;
-      padding: 12px 20px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    .browser-header {
-      background: #f8f9fa;
-      border-bottom: 1px solid #e0e0e0;
-      padding: 12px 16px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .browser-buttons {
-      display: flex;
-      gap: 8px;
-    }
-
-    .nav-button {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #d0d0d0;
-      background: white;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-size: 16px;
-      transition: all 0.2s;
-    }
-
-    .nav-button:hover {
-      background: #e8e8e8;
-    }
-
-    .address-bar {
-      flex: 1;
-      background: #f0f0f0;
-      border: 1px solid #d0d0d0;
-      border-radius: 8px;
-      padding: 4px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .address-bar-icon {
-      color: #666;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .address-bar input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      padding: 6px 0;
-      font-size: 13px;
-      color: #333;
-      outline: none;
-      min-width: 50px;
-    }
-
-    .address-bar input::placeholder {
-      color: #999;
-    }
-
-    .browser-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .search-page {
-      height: 100%;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 40px 20px;
-      background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
-    }
-
-    .search-logo {
-      font-size: 64px;
-      margin-bottom: 30px;
-      animation: bounce 2s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .search-box {
-      display: flex;
-      width: 100%;
-      max-width: 500px;
-      margin-bottom: 30px;
-    }
-
-    .search-input {
-      flex: 1;
-      padding: 14px 18px;
-      border: 2px solid #e0e0e0;
-      border-radius: 50px 0 0 50px;
-      font-size: 16px;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-
-    .search-input:focus {
-      border-color: #acd1fc;
-    }
-
-    .search-button {
-      padding: 14px 28px;
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      border: none;
-      border-radius: 0 50px 50px 0;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .search-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    /* ALERT */
-    .alert-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    .alert-box {
-      background: white;
-      border-radius: 12px;
-      padding: 40px;
-      text-align: center;
-      max-width: 400px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      animation: slideUp 0.4s;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(30px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .alert-icon {
-      font-size: 80px;
-      margin-bottom: 20px;
-      animation: wobble 0.6s;
-    }
-
-    @keyframes wobble {
-      0%, 100% { transform: rotate(0deg); }
-      25% { transform: rotate(-5deg); }
-      75% { transform: rotate(5deg); }
-    }
-
-    .alert-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    .alert-message {
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 30px;
-      line-height: 1.5;
-    }
-
-    .alert-button {
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      color: white;
-      border: none;
-      padding: 12px 40px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .alert-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    /* SONUÇLAR ve TABS */
-    .results-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background: white;
-    }
-
-    .result-item {
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 8px;
-      border-left: 4px solid #FFD1E8;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .result-item:hover {
-      background: #f0f0f0;
-      transform: translateX(5px);
-    }
-
-    .result-url {
-      font-size: 13px;
-      color: #436691;
-      margin-bottom: 8px;
-    }
-
-    .result-title {
-      font-size: 18px;
-      color: #333;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .result-description {
-      font-size: 14px;
-      color: #666;
-      line-height: 1.5;
-    }
-
-    .result-content {
-      flex: 1;
-    }
-
-    .ai-chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      background: white;
-      padding: 20px 30px;
-    }
-
-    .ai-messages {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .message {
-      display: flex;
-      margin-bottom: 15px;
-    }
-
-    .message.user {
-      justify-content: flex-end;
-    }
-
-    .message.ai {
-      justify-content: flex-start;
-    }
-
-    .message-bubble {
-      max-width: 70%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      word-wrap: break-word;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .message.user .message-bubble {
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      color: white;
-    }
-
-    .message.ai .message-bubble {
-      background: #f0f0f0;
-      color: #333;
-    }
-
-    .ai-input-area {
-      display: flex;
-      gap: 10px;
-      border-top: 1px solid #e0e0e0;
-      padding-top: 15px;
-    }
-
-    .ai-input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-
-    .ai-input:focus {
-      border-color: #D8C7FF;
-    }
-
-    .ai-send-button {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-
-    .ai-send-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    .tabs-container {
-      display: flex;
-      gap: 30px;
-      padding: 15px 30px;
-      background: white;
-      border-bottom: 1px solid #e0e0e0;
-      overflow-x: auto;
-    }
-
-    .tab {
-      padding: 8px 0;
-      border: none;
-      background: none;
-      color: #666;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      border-bottom: 3px solid transparent;
-      transition: all 0.3s;
-      white-space: nowrap;
-    }
-
-    .tab.active {
-      color: #436691;
-      border-bottom-color: #436691;
-    }
-
-    .tab:hover {
-      color: #333;
-    }
-
-    .images-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 15px;
-      padding: 20px 30px;
-      background: white;
-    }
-
-    .image-item {
-      aspect-ratio: 1;
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 60px;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 2px solid transparent;
-    }
-
-    .image-item:hover {
-      transform: scale(1.05);
-      border-color: #cbd0d6;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .videos-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px 30px;
-      background: white;
-    }
-
-    .video-item {
-      background: linear-gradient(135deg, #CFEFFF, #D8C7FF, #FFD1E8);
-      border-radius: 8px;
-      aspect-ratio: 16/9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .video-item:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
-    }
-
-    .shopping-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 20px;
-      padding: 20px 30px;
-      background: white;
-    }
-
-    .product-item {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 15px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      border: 2px solid transparent;
-    }
-
-    .product-item:hover {
-      border-color: #D8C7FF;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
-    }
-
-    .product-image {
-      font-size: 60px;
-      margin-bottom: 10px;
-    }
-
-    .product-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-
-    .product-price {
-      font-size: 16px;
-      color: #436691;
-      font-weight: 700;
-    }
-
-    .tab-content {
-      display: none;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .tab-content.active {
-      display: flex;
-      flex-direction: column;
-    }
-
-    iframe.page-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      flex: 1;
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <script type="module">
-import * as webllm from "https://esm.run/@mlc-ai/web-llm";
-
-window.engine = new webllm.MLCEngine();
-
-window.loadModel = async () => {
-  const selectedModel = "Qwen2.5-1.5B-Instruct-q4f16_1-MLC";
-  await window.engine.reload(selectedModel);
-  console.log("CatAI hazır!");
-};
-
-window.loadModel();
-</script>
- </head>
- <body>
-  <div class="browser-container">
-   <!-- Demo Uyarısı -->
-   <div class="demo-warning">
-    ⚠️ Bu bir demo/tarayıcı simülasyonudur - Eğlence amaçlıdır
-   </div>
-
-   <!-- Browser Header -->
-   <div class="browser-header">
-    <div class="browser-buttons">
-      <button class="nav-button" onclick="goBack()" title="Geri">←</button>
-      <button class="nav-button" onclick="goForward()" title="İleri">→</button>
-      <button class="nav-button" onclick="goHome()" title="Ana Sayfa">↻</button>
-    </div>
-    <div class="address-bar">
-      <span class="address-bar-icon">🔒</span>
-      <input type="text" id="addressInput" value="https://www.professorcatsearch.com" placeholder="URL girin..." onfocus="this.select()" onkeypress="handleAddress(event)" />
-    </div>
-   </div>
-
-   <!-- Browser Content -->
-   <div class="browser-content" id="browserContent">
-    <div class="search-page">
-     <div class="search-logo">🐱</div>
-     <div class="search-box">
-       <input type="text" class="search-input" id="searchInput" placeholder="ProfessorCat'ta ara..." onkeypress="handleSearch(event)" />
-       <button class="search-button" onclick="performSearch()">Ara</button>
-     </div>
-    </div>
-   </div>
-  </div>
-
-  <!-- Alert Modal -->
-  <div class="alert-overlay" id="alertOverlay" style="display: none;">
-   <div class="alert-box">
-    <div class="alert-icon">🐱</div>
-    <div class="alert-title">ProfessorCat uyarısı!</div>
-    <div class="alert-message">Bu arama sonuçları ProfessorCat tarafından işlenmiştir. Devam etmek için tıklayın.</div>
-    <button class="alert-button" onclick="confirmAlert()">Devam Et</button>
-   </div>
-  </div>
-
-  <script>
-    // -------- DEĞİŞKENLER --------
-    let lastSearchQuery = '';
-    let canvaLink = 'https://www.canva.com/design/DAGrke6nXUY/OdOciaHr0CxE1haEmn-IeA/view?utm_content=DAGrke6nXUY&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h31ec2b4051';
-    let currentTab = 'all';
-    let history = [];
-    let historyIndex = -1;
-
-    // İzin verilen kendi sitelerin
-    const ownSites = [
-      'ayse-create.github.io',
-      'professorcatsearch.com',
-      'whiskersearch.com'
-    ];
-
-    // -------- ADRES ÇUBUĞU --------
-    function handleAddress(event) {
-      if (event.key === 'Enter') {
-        const input = document.getElementById('addressInput');
-        let url = input.value.trim();
-        if (!url) return;
-
-        // http:// veya https:// yoksa ekle
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-          url = 'https://' + url;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WhiskerSearch — Taşındı</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
         }
 
-        // Kendi sitem mi?
-        const isOwn = ownSites.some(site => url.includes(site));
-
-        if (isOwn) {
-          loadPage(url);
-        } else {
-          window.open(url, '_blank', 'noopener,noreferrer');
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: #f4f6f8;
+            color: #202124;
+            overflow: hidden;
         }
-      }
-    }
 
-    // -------- SAYFA YÜKLE (iframe) --------
-    function loadPage(url) {
-      const content = document.getElementById('browserContent');
-      content.innerHTML = `
-        <iframe class="page-frame" src="${url}" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-      `;
-      document.getElementById('addressInput').value = url;
-
-      // Geçmişe ekle
-      history.push({ type: 'page', url: url });
-      historyIndex = history.length - 1;
-    }
-
-    // -------- ANA SAYFA --------
-    function goHome() {
-      const content = document.getElementById('browserContent');
-      content.innerHTML = `
-        <div class="search-page">
-          <div class="search-logo">🐱</div>
-          <div class="search-box">
-            <input type="text" class="search-input" id="searchInput" placeholder="ProfessorCat'ta ara..." onkeypress="handleSearch(event)" />
-            <button class="search-button" onclick="performSearch()">Ara</button>
-          </div>
-        </div>
-      `;
-      document.getElementById('addressInput').value = 'https://www.professorcatsearch.com';
-      // Geçmişi sıfırlama
-      history = [];
-      historyIndex = -1;
-    }
-
-    // -------- GERİ --------
-    function goBack() {
-      if (historyIndex > 0) {
-        historyIndex--;
-        const entry = history[historyIndex];
-        if (entry.type === 'results') {
-          lastSearchQuery = entry.query;
-          showResults();
-        } else if (entry.type === 'page') {
-          loadPage(entry.url);
+        .container {
+            width: min(680px, 90%);
+            text-align: center;
+            animation: appear 0.8s ease;
         }
-      }
-    }
 
-    // -------- İLERİ --------
-    function goForward() {
-      if (historyIndex < history.length - 1) {
-        historyIndex++;
-        const entry = history[historyIndex];
-        if (entry.type === 'results') {
-          lastSearchQuery = entry.query;
-          showResults();
-        } else if (entry.type === 'page') {
-          loadPage(entry.url);
+        .logo {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 22px;
+            animation: logoAppear 1s ease;
         }
-      }
-    }
 
-    // -------- ARAMA --------
-    function handleSearch(event) {
-      if (event.key === 'Enter') {
-        performSearch();
-      }
-    }
-
-    function performSearch() {
-      const query = document.getElementById('searchInput').value;
-      if (query.trim()) {
-        lastSearchQuery = query;
-        document.getElementById('addressInput').value = `https://professorcatsearch.com/search?q=${encodeURIComponent(query)}`;
-        showAlert();
-      }
-    }
-
-    function showAlert() {
-      document.getElementById('alertOverlay').style.display = 'flex';
-    }
-
-    function confirmAlert() {
-      document.getElementById('alertOverlay').style.display = 'none';
-      showResults();
-    }
-
-    // -------- SONUÇLARI GÖSTER --------
-    function showResults() {
-      const content = document.getElementById('browserContent');
-      const query = lastSearchQuery;
-
-      content.innerHTML = `
-        <div style="display: flex; align-items: center; padding: 20px 30px; background: #f9f9f9; border-bottom: 1px solid #e0e0e0;">
-          <div class="search-box" style="max-width: 600px; margin: 0;">
-            <input type="text" class="search-input" value="${query}" onkeypress="handleSearch(event)" style="max-width: none;" />
-            <button class="search-button" onclick="performSearch()">Ara</button>
-          </div>
-        </div>
-
-        <div class="tabs-container">
-          <button class="tab active" onclick="switchTab('all')">🔍 Tümü</button>
-          <button class="tab" onclick="switchTab('images')">🖼️ Görseller</button>
-          <button class="tab" onclick="switchTab('videos')">🎬 Videolar</button>
-          <button class="tab" onclick="switchTab('shopping')">🛍️ Alışveriş</button>
-          <button class="tab" onclick="switchTab('ai')">✨ AI Modu</button>
-        </div>
-
-        <!-- Tümü -->
-        <div id="all-content" class="tab-content active">
-          <div class="results-container">
-            <div style="margin-bottom: 10px; color: #999; font-size: 14px;">Sonuçlar: "${query}" için</div>
-            <div class="result-item" onclick="openResult()">
-              <div class="result-content">
-                <div class="result-url">professorcatsearch.com › arama › ${query}</div>
-                <div class="result-title">ProfessorCat'ın En İyi Sonucu</div>
-                <div class="result-description">ProfessorCat sizin için özel olarak seçtiği bu kaynağı incelemenizi tavsiye eder.</div>
-              </div>
-            </div>
-            <div class="result-item" onclick="openResult()">
-              <div class="result-content">
-                <div class="result-url">professorcatsearch.com › sonuç › ${query}</div>
-                <div class="result-title">Başka Bir ProfessorCat Önerisi</div>
-                <div class="result-description">ProfessorCat'ın dış dünyaya bakışını sizin de deneyimlemenizi çok isterim.</div>
-              </div>
-            </div>
-            <div class="result-item" onclick="openResult()">
-              <div class="result-content">
-                <div class="result-url">professorcatsearch.com › tavsiye › ${query}</div>
-                <div class="result-title">ProfessorCat'ın Özel Seçimi</div>
-                <div class="result-description">Bu bağlantı ProfessorCat tarafından titizlikle incelendi ve onaylandı!</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Görseller -->
-        <div id="images-content" class="tab-content">
-          <div class="images-grid">
-            <div class="image-item" onclick="openResult()">😺</div>
-            <div class="image-item" onclick="openResult()">😸</div>
-            <div class="image-item" onclick="openResult()">😻</div>
-            <div class="image-item" onclick="openResult()">😽</div>
-            <div class="image-item" onclick="openResult()">😼</div>
-            <div class="image-item" onclick="openResult()">😹</div>
-            <div class="image-item" onclick="openResult()">😾</div>
-            <div class="image-item" onclick="openResult()">😿</div>
-            <div class="image-item" onclick="openResult()">🐱</div>
-            <div class="image-item" onclick="openResult()">😺</div>
-            <div class="image-item" onclick="openResult()">😸</div>
-            <div class="image-item" onclick="openResult()">😻</div>
-          </div>
-        </div>
-
-        <!-- Videolar -->
-        <div id="videos-content" class="tab-content">
-          <div class="videos-container">
-            <div class="video-item" onclick="openResult()">▶️ 🐱</div>
-            <div class="video-item" onclick="openResult()">▶️ 😹</div>
-            <div class="video-item" onclick="openResult()">▶️ 😸</div>
-            <div class="video-item" onclick="openResult()">▶️ 🐱</div>
-            <div class="video-item" onclick="openResult()">▶️ 😻</div>
-            <div class="video-item" onclick="openResult()">▶️ 😼</div>
-          </div>
-        </div>
-
-        <!-- Alışveriş -->
-        <div id="shopping-content" class="tab-content">
-          <div class="shopping-container">
-            <div class="product-item" onclick="openResult()"><div class="product-image">🐱</div><div class="product-name">ProfessorCat Tişört</div><div class="product-price">₺199</div></div>
-            <div class="product-item" onclick="openResult()"><div class="product-image">😸</div><div class="product-name">Kedi Şapkası</div><div class="product-price">₺149</div></div>
-            <div class="product-item" onclick="openResult()"><div class="product-image">😹</div><div class="product-name">Mugs Kedi</div><div class="product-price">₺79</div></div>
-            <div class="product-item" onclick="openResult()"><div class="product-image">😻</div><div class="product-name">Kedi Bilezik</div><div class="product-price">₺99</div></div>
-            <div class="product-item" onclick="openResult()"><div class="product-image">😼</div><div class="product-name">Kedi Çorap</div><div class="product-price">₺49</div></div>
-            <div class="product-item" onclick="openResult()"><div class="product-image">😽</div><div class="product-name">Kedi Hoodie</div><div class="product-price">₺299</div></div>
-          </div>
-        </div>
-
-        <!-- AI Modu -->
-        <div id="ai-content" class="tab-content">
-          <div class="ai-chat-container">
-            <div class="ai-messages" id="aiMessages">
-              <div style="display: flex; align-items: center; justify-content: center; height: 100%; flex-direction: column; gap: 20px;">
-                <div style="font-size: 80px;">🤖</div>
-                <div style="font-size: 32px; font-weight: 700; color: #333;">CatAI</div>
-                <div style="font-size: 16px; color: #666; max-width: 400px; text-align: center;">ProfessorCat'ın yapay zeka asistanı ile sohbet edin. Bir soru sorun ve hazır olun!</div>
-              </div>
-            </div>
-            <div class="ai-input-area">
-              <input type="text" class="ai-input" id="aiInput" placeholder="Bir soru sor..." onkeypress="handleAIMessage(event)" />
-              <button class="ai-send-button" onclick="sendAIMessage()">Gönder</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Geçmişe ekle
-      history.push({ type: 'results', query: query });
-      historyIndex = history.length - 1;
-
-      // AI input focus
-      setTimeout(() => {
-        const aiInput = document.getElementById('aiInput');
-        if (aiInput) aiInput.focus();
-      }, 100);
-    }
-
-    // -------- AI MESAJ --------
-    function handleAIMessage(event) {
-      if (event.key === 'Enter') {
-        sendAIMessage();
-      }
-    }
-
-    async function sendAIMessage() {
-      const input = document.getElementById('aiInput');
-      const message = input.value.trim();
-      if (!message) return;
-
-      const container = document.getElementById('aiMessages');
-
-      // Kullanıcı mesajı
-      const userDiv = document.createElement('div');
-      userDiv.className = 'message user';
-      userDiv.innerHTML = `<div class="message-bubble">${message}</div>`;
-      container.appendChild(userDiv);
-
-      input.value = '';
-
-      // AI düşünüyor
-      const aiDiv = document.createElement('div');
-      aiDiv.className = 'message ai';
-      aiDiv.innerHTML = '<div class="message-bubble">CatAI düşünüyor...</div>';
-      container.appendChild(aiDiv);
-      container.scrollTop = container.scrollHeight;
-
-      try {
-        const response = await window.engine.chat.completions.create({
-          messages: [
-            { role: "system", content: "Sen CatAI adlı Türkçe konuşan yardımcı bir yapay zekasın. Her zaman Türkçe cevap ver." },
-            { role: "user", content: message }
-          ]
-        });
-        aiDiv.innerHTML = `<div class="message-bubble">${response.choices[0].message.content}</div>`;
-      } catch (err) {
-        aiDiv.innerHTML = `<div class="message-bubble">Hata: ${err.message}</div>`;
-      }
-      container.scrollTop = container.scrollHeight;
-    }
-
-    // -------- TAB GEÇİŞ --------
-    function switchTab(tabName) {
-      currentTab = tabName;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
-      document.getElementById(`${tabName}-content`).classList.add('active');
-    }
-
-    // -------- SONUÇ AÇ --------
-    function openResult() {
-      window.open(canvaLink, '_blank', 'noopener,noreferrer');
-    }
-
-    // -------- RELOAD (Tarayıcı yenileme butonu) --------
-    function reload() {
-      if (historyIndex >= 0 && history[historyIndex]) {
-        const entry = history[historyIndex];
-        if (entry.type === 'results') {
-          lastSearchQuery = entry.query;
-          showResults();
-        } else if (entry.type === 'page') {
-          loadPage(entry.url);
+        h1 {
+            margin: 0 0 10px;
+            font-size: clamp(28px, 6vw, 42px);
+            font-weight: 700;
         }
-      }
-    }
 
-    // -------- SAYFA YÜKLENİNCE --------
-    window.onload = function() {
-      // Adres çubuğuna odaklanma
-      const addrInput = document.getElementById('addressInput');
-      if (addrInput) addrInput.value = 'https://www.professorcatsearch.com';
-    };
-  </script>
- </body>
+        .description {
+            margin: 0 auto 30px;
+            max-width: 560px;
+            font-size: 17px;
+            line-height: 1.6;
+            color: #5f6368;
+        }
+
+        /* Sahte tarayıcı */
+        .browser {
+            width: 100%;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+            overflow: hidden;
+            text-align: left;
+            margin: 0 auto 28px;
+        }
+
+        .browser-top {
+            height: 42px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 7px;
+            background: #eef0f2;
+        }
+
+        .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #c9cdd1;
+        }
+
+        .address-area {
+            padding: 13px 15px;
+            background: white;
+        }
+
+        .address-bar {
+            height: 42px;
+            border-radius: 9px;
+            background: #f1f3f4;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 14px;
+            color: #5f6368;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .address-icon {
+            margin-right: 10px;
+            font-family: Arial, sans-serif;
+            color: #777;
+        }
+
+        #addressText {
+            overflow: hidden;
+            text-overflow: clip;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 17px;
+            background: #555;
+            margin-left: 2px;
+            animation: blink 0.8s infinite;
+            vertical-align: middle;
+        }
+
+        .status {
+            min-height: 28px;
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 22px;
+        }
+
+        .check {
+            display: inline-block;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: 0.4s ease;
+        }
+
+        .check.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 230px;
+            padding: 14px 24px;
+            border-radius: 10px;
+            background: #202124;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .small {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #9aa0a6;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes logoAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.75);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes blink {
+            0%, 45% {
+                opacity: 1;
+            }
+
+            46%, 100% {
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .description {
+                font-size: 15px;
+            }
+
+            .address-bar {
+                font-size: 11px;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <img src="1.png" alt="WhiskerSearch" class="logo">
+
+        <h1>WhiskerSearch taşındı!</h1>
+
+        <p class="description">
+            WhiskerSearch artık yeni adresinde.
+            Güncel WhiskerSearch'e ve tüm WhiskerHub projelerine buradan ulaşabilirsin.
+        </p>
+
+        <div class="browser">
+
+            <div class="browser-top">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+
+            <div class="address-area">
+                <div class="address-bar">
+                    <span class="address-icon">🔒</span>
+                    <span id="addressText"></span>
+                    <span class="cursor"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="status">
+            <span id="statusText">Yeni adres hazırlanıyor...</span>
+            <span id="check" class="check"> ✓</span>
+        </div>
+
+        <a
+            href="https://ayse-create.github.io/WhiskerSearch"
+            class="button"
+        >
+            WhiskerSearch'e Git
+        </a>
+
+        <div class="small">
+            WhiskerHub • WhiskerSearch
+        </div>
+
+    </main>
+
+    <script>
+        const oldAddress =
+            "ayse-create.github.io/WhiskerSearch-ProfCat";
+
+        const newAddress =
+            "ayse-create.github.io/WhiskerSearch";
+
+        const addressText = document.getElementById("addressText");
+        const statusText = document.getElementById("statusText");
+        const check = document.getElementById("check");
+
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function typeText(text, speed) {
+            for (let i = 0; i < text.length; i++) {
+                addressText.textContent += text[i];
+                await wait(speed);
+            }
+        }
+
+        async function eraseText(speed) {
+            while (addressText.textContent.length > 0) {
+                addressText.textContent =
+                    addressText.textContent.slice(0, -1);
+
+                await wait(speed);
+            }
+        }
+
+        async function startAnimation() {
+
+            // Eski adres
+            await typeText(oldAddress, 25);
+
+            await wait(900);
+
+            // Eski adres siliniyor
+            await eraseText(18);
+
+            await wait(250);
+
+            // Yeni adres yazılıyor
+            await typeText(newAddress, 35);
+
+            await wait(500);
+
+            // Tamamlandı
+            statusText.textContent = "Güncel adres hazır";
+            check.classList.add("show");
+
+            /*
+             * Otomatik yönlendirme istersen aşağıdaki kısmı
+             * aktif edebilirsin.
+             *
+             * Şimdilik kullanıcı butona basıyor.
+             */
+
+            // await wait(2500);
+            // window.location.href =
+            //     "https://ayse-create.github.io/WhiskerSearch";
+        }
+
+        startAnimation();
+    </script>
+
+</body>
 </html>
+```
